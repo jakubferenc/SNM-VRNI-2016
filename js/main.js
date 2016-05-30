@@ -30,13 +30,13 @@ function init() {
         source: https://www.sitepoint.com/bringing-vr-to-web-google-cardboard-three-js/
     */
 
-    camera = new THREE.PerspectiveCamera(90, .2, 0.001, 600);
-    camera.position.set(0, 0, 10);
+    camera = new THREE.PerspectiveCamera(90, 16/9, 0.001, 800);
+    camera.position.set(0, 0, 12);
     camera.lookAt(scene.position);
     scene.add(camera);
 
     var pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
-    pointLight.position.set( 10, 10, 10 );
+    pointLight.position.set( 5, 10, 20 );
 
     scene.add(pointLight);    
     
@@ -150,7 +150,7 @@ function init() {
         texture = new THREE.Texture(canvasVideo);
         texture.context = canvasVideoContext;
 
-        cameraPlane = new THREE.PlaneGeometry(1920, 1280);
+        cameraPlane = new THREE.PlaneGeometry(1920, 1400);
 
         cameraMesh = new THREE.Mesh(cameraPlane, new THREE.MeshBasicMaterial({
             color: 0xffffff
@@ -315,42 +315,46 @@ function draw_tracking_rectangle() {
     canvasVideoContext.fillText(username, (trackingEvent.x - trackingEvent.width / 2) * ratio, (trackingEvent.y - trackingEvent.height / 2) * ratioH);
 
     
-    cube.position.x = ( ( (trackingEvent.x - trackingEvent.width ) * ratio ) / 100 ) - 10; 
-    cube.position.y = - ( (trackingEvent.y - trackingEvent.height / 1) * ratioH / 100 ) ;
-    
-    var normalizedZ = function(z) {
-    
-       var _getSign = (z < 1) ? 1 : -1;    
-       var _normZ = Math.abs(z - 1) * 10 * _getSign;  
+    if (current_status === "found") {
+
+        cube.position.x = ( ( (trackingEvent.x - trackingEvent.width ) * ratio ) / 100 ) - 10; 
+        cube.position.y = - ( (trackingEvent.y - trackingEvent.height / 1) * ratioH / 100 ) ;
+
+        var normalizedZ = function(z) {
+
+           var _getSign = (z < 1) ? 1 : -1;    
+           var _normZ = Math.abs(z - 1) * 10 * _getSign;  
+
+           // cut off higher of lower values    
+           if (_normZ > 15) {
+
+               _normZ = 15
+
+           }
+
+           if (_normZ < -20) {
+
+               _normZ = -20
+
+           } 
+
+           return _normZ;    
+
+        }
+
+
+        cube.position.z = normalizedZ(z);
+
+
+        //cube.rotation.x = (Math.PI / 2) - trackingEvent.angle;
+        cube.rotation.y = (Math.PI / 2) + trackingEvent.angle;
+
+        cube.name = "cube_snm";
+
+        scene.add(cube);         
         
-       // cut off higher of lower values    
-       if (_normZ > 15) {
-           
-           _normZ = 15
-           
-       }
         
-       if (_normZ < -20) {
-           
-           _normZ = -20
-           
-       } 
-        
-       return _normZ;    
-        
-    }
-   
-    
-    cube.position.z = normalizedZ(z);
-    
-  
-    //cube.rotation.x = (Math.PI / 2) - trackingEvent.angle;
-    cube.rotation.y = (Math.PI / 2) + trackingEvent.angle;
-    
-    cube.name = "cube_snm";
- 
-    scene.add(cube);    
-    
+    }   
 
 }
 
