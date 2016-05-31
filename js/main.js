@@ -30,7 +30,7 @@ function init() {
         source: https://www.sitepoint.com/bringing-vr-to-web-google-cardboard-three-js/
     */
 
-    camera = new THREE.PerspectiveCamera(90, 16/9, 0.001, 800);
+    camera = new THREE.PerspectiveCamera(90, 1, 0.001, 800);
     camera.position.set(0, 0, 12);
     camera.lookAt(scene.position);
     scene.add(camera);
