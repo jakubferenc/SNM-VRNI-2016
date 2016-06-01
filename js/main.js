@@ -315,7 +315,7 @@ function draw_tracking_rectangle() {
     canvasVideoContext.fillText(username, (trackingEvent.x - trackingEvent.width / 2) * ratio, (trackingEvent.y - trackingEvent.height / 2) * ratioH);
 
     
-    if (current_status === "found") {
+    if (current_status === "found" && username !== "searching...") {
 
         cube.position.x = ( ( (trackingEvent.x - trackingEvent.width ) * ratio ) / 100 ) - 10; 
         cube.position.y = - ( (trackingEvent.y - trackingEvent.height / 1) * ratioH / 100 ) ;
